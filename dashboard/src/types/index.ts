@@ -126,6 +126,37 @@ export interface AnalyticsData {
   };
 }
 
+export interface TrendingTopic {
+  id: string;
+  title: string;
+  category: string;
+  category_label: string;
+  reason: string;
+  audience: string;
+  viral_score: number;
+  keywords: string[];
+  source: 'ai' | 'youtube';
+  youtube_views?: number;
+  youtube_url?: string;
+}
+
+export interface TrendingCategory {
+  id: string;
+  label: string;
+  region_hint: string;
+  emoji: string;
+}
+
+export interface TrendingData {
+  category: string;
+  category_label: string;
+  region: string;
+  topics: TrendingTopic[];
+  categories: TrendingCategory[];
+  generated_at: string;
+  cached: boolean;
+}
+
 export interface UploadResult {
   projectId: string;
   status: string;

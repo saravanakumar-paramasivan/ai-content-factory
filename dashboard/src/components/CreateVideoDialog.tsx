@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Plus, Sparkles } from 'lucide-react';
 import { toast } from 'sonner';
 import { Button } from './ui/button';
@@ -24,12 +24,34 @@ const NICHE_EXAMPLES = [
 
 interface CreateVideoDialogProps {
   onCreated: () => void;
+  // Controlled mode — used by the Trending page
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  initialNiche?: string;
+  hideButton?: boolean;
 }
 
-export function CreateVideoDialog({ onCreated }: CreateVideoDialogProps) {
-  const [open, setOpen] = useState(false);
-  const [niche, setNiche] = useState('');
+export function CreateVideoDialog({
+  onCreated,
+  open: controlledOpen,
+  onOpenChange: controlledOnOpenChange,
+  initialNiche = '',
+  hideButton = false,
+}: CreateVideoDialogProps) {
+  const isControlled = controlledOpen !== undefined;
+  const [internalOpen, setInternalOpen] = useState(false);
+  const open = isControlled ? controlledOpen : internalOpen;
+
+  const [niche, setNiche] = useState(initialNiche);
   const [loading, setLoading] = useState(false);
+
+  // Sync niche when initialNiche changes (e.g. user picks a different card)
+  useEffect(() => { setNiche(initialNiche); }, [initialNiche]);
+
+  function setOpen(v: boolean) {
+    if (isControlled) controlledOnOpenChange?.(v);
+    else setInternalOpen(v);
+  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -60,10 +82,12 @@ export function CreateVideoDialog({ onCreated }: CreateVideoDialogProps) {
 
   return (
     <>
-      <Button onClick={() => setOpen(true)} className="gap-2">
-        <Plus className="h-4 w-4" />
-        New Video
-      </Button>
+      {!hideButton && (
+        <Button onClick={() => setOpen(true)} className="gap-2">
+          <Plus className="h-4 w-4" />
+          New Video
+        </Button>
+      )}
 
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="sm:max-w-md">
@@ -92,7 +116,6 @@ export function CreateVideoDialog({ onCreated }: CreateVideoDialogProps) {
               <p className="text-xs text-muted-foreground text-right">{niche.length}/120</p>
             </div>
 
-            {/* Example niches */}
             <div className="space-y-1.5">
               <p className="text-xs text-muted-foreground">Quick examples:</p>
               <div className="flex flex-wrap gap-1.5">
