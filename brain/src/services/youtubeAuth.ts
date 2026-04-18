@@ -13,18 +13,19 @@ interface OAuthSecret {
 }
 
 function loadSecret(): OAuthSecret {
+  // Cloud/Railway: set the full JSON as GOOGLE_OAUTH_CLIENT_SECRET_JSON env var
+  if (process.env.GOOGLE_OAUTH_CLIENT_SECRET_JSON) {
+    return JSON.parse(process.env.GOOGLE_OAUTH_CLIENT_SECRET_JSON);
+  }
   const secretPath = path.resolve(__dirname, '../../oauth_client_secret.json');
-  const raw = fs.readFileSync(secretPath, 'utf-8');
-  return JSON.parse(raw);
+  return JSON.parse(fs.readFileSync(secretPath, 'utf-8'));
 }
 
-function createOAuth2Client() {
+export function createOAuth2Client() {
   const { web } = loadSecret();
-  return new google.auth.OAuth2(
-    web.client_id,
-    web.client_secret,
-    web.redirect_uris[0]
-  );
+  // GOOGLE_OAUTH_REDIRECT_URI overrides the file — needed when deploying to Railway
+  const redirectUri = process.env.GOOGLE_OAUTH_REDIRECT_URI ?? web.redirect_uris[0];
+  return new google.auth.OAuth2(web.client_id, web.client_secret, redirectUri);
 }
 
 const YOUTUBE_SCOPES = [

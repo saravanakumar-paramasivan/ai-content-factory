@@ -1,15 +1,8 @@
 import * as fs from 'fs';
-import * as path from 'path';
 import { google } from 'googleapis';
 import { getStoredTokens } from './tokenStore';
+import { createOAuth2Client } from './youtubeAuth';
 import { generateVideoMetadata } from './metadataGenerator';
-
-function createAuthorizedClient() {
-  const secretPath = path.resolve(__dirname, '../../oauth_client_secret.json');
-  const { web } = JSON.parse(fs.readFileSync(secretPath, 'utf-8'));
-  const auth = new google.auth.OAuth2(web.client_id, web.client_secret, web.redirect_uris[0]);
-  return auth;
-}
 
 export interface UploadResult {
   youtubeVideoId: string;
@@ -33,7 +26,7 @@ export async function uploadToYouTube(
     throw new Error('No YouTube OAuth tokens found. Visit /auth/youtube to authorize.');
   }
 
-  const auth = createAuthorizedClient();
+  const auth = createOAuth2Client();
   auth.setCredentials({
     access_token: tokens.accessToken,
     refresh_token: tokens.refreshToken ?? undefined,

@@ -1,9 +1,8 @@
-import * as fs from 'fs';
-import * as path from 'path';
 import { Router, Request, Response } from 'express';
 import { google } from 'googleapis';
 import { prisma } from '../lib/db';
 import { getStoredTokens } from '../services/tokenStore';
+import { createOAuth2Client } from '../services/youtubeAuth';
 
 export const analyticsRouter = Router();
 
@@ -25,10 +24,7 @@ function monthLabel(ym: string) {
 }
 
 function buildAuth() {
-  const secretPath = path.resolve(__dirname, '../../oauth_client_secret.json');
-  if (!fs.existsSync(secretPath)) return null;
-  const { web } = JSON.parse(fs.readFileSync(secretPath, 'utf-8'));
-  return new google.auth.OAuth2(web.client_id, web.client_secret, web.redirect_uris[0]);
+  try { return createOAuth2Client(); } catch { return null; }
 }
 
 // GET /analytics
