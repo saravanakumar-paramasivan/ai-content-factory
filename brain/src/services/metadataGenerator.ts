@@ -1,7 +1,5 @@
 import Anthropic from '@anthropic-ai/sdk';
 
-const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
-
 interface VideoMetadata {
   title: string;
   description: string;
@@ -35,6 +33,7 @@ Return a JSON object with exactly these fields:
 
 Return ONLY the JSON. No markdown, no explanation.`;
 
+  const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
   const response = await anthropic.messages.create({
     model: 'claude-sonnet-4-6',
     max_tokens: 512,
