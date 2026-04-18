@@ -1,4 +1,4 @@
-import { VideoProject, YouTubeStatus, UploadResult } from '@/types';
+import { VideoProject, YouTubeStatus, UploadResult, AnalyticsData } from '@/types';
 
 const BRAIN_URL = process.env.BRAIN_URL || 'http://localhost:3000';
 
@@ -30,4 +30,6 @@ export const brain = {
     brainFetch<UploadResult>(`/upload/${id}`, { method: 'POST' }),
 
   getYouTubeStatus: () => brainFetch<YouTubeStatus>('/auth/status'),
+
+  getAnalytics: () => brainFetch<AnalyticsData>('/analytics'),
 };

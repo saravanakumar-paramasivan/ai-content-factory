@@ -103,11 +103,13 @@ async function processJob(job: Job<VideoPipelineJob>) {
       cleanup_temp: true,
     });
 
+    const videoPath = result['video_path'] as string;
+    if (!videoPath) throw new Error('Engine /render returned no video_path');
     await prisma.videoProject.update({
       where: { id: projectId },
-      data: { videoPath: result['video_path'] as string },
+      data: { videoPath },
     });
-    console.log(`[Worker] [${projectId}] Render complete: ${result['video_path']}`);
+    console.log(`[Worker] [${projectId}] Render complete: ${videoPath}`);
   } else {
     console.log(`[Worker] [${projectId}] Step 3: Video already rendered, skipping.`);
   }

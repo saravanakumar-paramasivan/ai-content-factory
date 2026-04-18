@@ -7,14 +7,18 @@ import { StatCard } from '@/components/StatCard';
 import { ProjectsTable } from '@/components/ProjectsTable';
 import { CreateVideoDialog } from '@/components/CreateVideoDialog';
 
-const fetcher = (url: string) => fetch(url).then(r => r.json());
+const fetcher = (url: string) =>
+  fetch(url).then(r => {
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    return r.json();
+  });
 
 interface DashboardClientProps {
   initialProjects: VideoProject[];
 }
 
 export function DashboardClient({ initialProjects }: DashboardClientProps) {
-  const { data: projects = initialProjects, mutate } = useSWR<VideoProject[]>(
+  const { data: rawData = initialProjects, mutate } = useSWR<VideoProject[]>(
     '/api/projects',
     fetcher,
     {
@@ -27,6 +31,7 @@ export function DashboardClient({ initialProjects }: DashboardClientProps) {
     }
   );
 
+  const projects = Array.isArray(rawData) ? rawData : initialProjects;
   const handleRefresh = useCallback(() => mutate(), [mutate]);
 
   const stats = {

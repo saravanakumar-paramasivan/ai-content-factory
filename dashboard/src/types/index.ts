@@ -53,6 +53,79 @@ export interface YouTubeStatus {
   expiryDate?: number;
 }
 
+export interface VideoStats {
+  viewCount: number;
+  likeCount: number;
+  commentCount: number;
+  publishedAt: string | null;
+}
+
+export interface YouTubeVideo {
+  projectId: string;
+  youtubeVideoId: string;
+  title: string | null;
+  url: string | null;
+  stats: VideoStats | null;
+}
+
+export interface ElevenLabsUsage {
+  available: boolean;
+  tier?: string;
+  characters_used?: number;
+  characters_limit?: number;
+  percent_used?: number;
+  reset_date?: string | null;
+  status?: 'healthy' | 'warning' | 'critical';
+}
+
+export interface AnthropicUsage {
+  model: string;
+  scripting_attempts: number;
+  estimated_input_tokens: number;
+  estimated_output_tokens: number;
+  estimated_cost_usd: number;
+  billing_type: string;
+  billing_url: string;
+  renewal: string;
+  impact: string;
+}
+
+export interface PexelsUsage {
+  available: boolean;
+  clips_downloaded: number;
+  requests_estimated: number;
+  plan_limit_monthly: number;
+  renewal: string;
+  impact: string;
+  billing_url: string;
+}
+
+export interface MonthCount {
+  month: string;
+  label: string;
+  count: number;
+}
+
+export interface AnalyticsData {
+  period: { month: string; label: string };
+  projects: {
+    total: number;
+    by_status: Record<string, number>;
+    by_month: MonthCount[];
+  };
+  apis: {
+    anthropic: AnthropicUsage;
+    elevenlabs: ElevenLabsUsage;
+    pexels: PexelsUsage;
+  };
+  youtube: {
+    connected: boolean;
+    videos_uploaded: number;
+    videos: YouTubeVideo[];
+    totals: { views: number; likes: number; comments: number };
+  };
+}
+
 export interface UploadResult {
   projectId: string;
   status: string;
