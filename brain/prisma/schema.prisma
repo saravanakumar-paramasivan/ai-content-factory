@@ -1,0 +1,46 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model YoutubeToken {
+  id           Int      @id @default(autoincrement())
+  accessToken  String
+  refreshToken String?
+  scope        String?
+  tokenType    String?
+  expiryDate   BigInt?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+enum ProjectStatus {
+  DRAFT
+  SCRIPTING
+  FETCHING_ASSETS
+  RENDERING
+  READY_TO_UPLOAD
+  COMPLETED
+  FAILED
+}
+
+model VideoProject {
+  id             String        @id @default(uuid())
+  niche          String
+  status         ProjectStatus @default(DRAFT)
+  engineId       String?
+  scriptData     Json?
+  audioPath      String?
+  clipPaths      Json?
+  videoPath      String?
+  youtubeVideoId String?
+  youtubeUrl     String?
+  youtubeTitle   String?
+  errorMessage   String?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+}
