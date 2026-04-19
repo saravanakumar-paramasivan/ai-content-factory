@@ -2,7 +2,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { signOut } from 'next-auth/react';
-import { Clapperboard, LogOut, Youtube, ChevronDown, BarChart2, TrendingUp } from 'lucide-react';
+import { Clapperboard, LogOut, Youtube, ChevronDown, BarChart2, TrendingUp, DollarSign } from 'lucide-react';
 import { Button } from './ui/button';
 import { YouTubeStatus } from '@/types';
 import { cn } from '@/lib/utils';
@@ -18,6 +18,7 @@ export function Navbar({ youtubeStatus }: NavbarProps) {
   const navLinks = [
     { href: '/dashboard', label: 'Dashboard' },
     { href: '/dashboard/trending', label: 'Trending', icon: <TrendingUp className="h-3.5 w-3.5" /> },
+    { href: '/dashboard/affiliate', label: 'Affiliate', icon: <DollarSign className="h-3.5 w-3.5" /> },
     { href: '/dashboard/analytics', label: 'Analytics', icon: <BarChart2 className="h-3.5 w-3.5" /> },
   ];
 

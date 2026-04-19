@@ -126,6 +126,26 @@ export interface AnalyticsData {
   };
 }
 
+export interface AffiliateLinkInfo {
+  id: string;
+  name: string;
+  platform: string;
+  category: string;
+  cta: string;
+  commission: string;
+  signupUrl: string;
+  triggers: string[];
+  active: boolean;
+  configured: boolean;
+}
+
+export interface AffiliateStatus {
+  total: number;
+  active: number;
+  inactive: number;
+  links: AffiliateLinkInfo[];
+}
+
 export interface TrendingTopic {
   id: string;
   title: string;

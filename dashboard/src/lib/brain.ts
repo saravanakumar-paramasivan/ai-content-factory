@@ -1,4 +1,4 @@
-import { VideoProject, YouTubeStatus, UploadResult, AnalyticsData, TrendingData } from '@/types';
+import { VideoProject, YouTubeStatus, UploadResult, AnalyticsData, TrendingData, AffiliateStatus } from '@/types';
 
 const BRAIN_URL = process.env.BRAIN_URL || 'http://localhost:3000';
 
@@ -35,4 +35,6 @@ export const brain = {
 
   getTrending: (category: string, region: string, refresh = false) =>
     brainFetch<TrendingData>(`/trending?category=${category}&region=${region}${refresh ? '&refresh=true' : ''}`),
+
+  getAffiliate: () => brainFetch<AffiliateStatus>('/affiliate'),
 };

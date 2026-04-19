@@ -5,6 +5,7 @@ import { projectsRouter } from './routes/projects';
 import { uploadRouter } from './routes/upload';
 import { analyticsRouter } from './routes/analytics';
 import { trendingRouter } from './routes/trending';
+import { affiliateRouter } from './routes/affiliate';
 import { handleCallback } from './services/youtubeAuth';
 import { saveTokens, getStoredTokens } from './services/tokenStore';
 import { startVideoWorker } from './workers/videoWorker';
@@ -27,6 +28,7 @@ app.use('/projects', projectsRouter);
 app.use('/upload', uploadRouter);
 app.use('/analytics', analyticsRouter);
 app.use('/trending', trendingRouter);
+app.use('/affiliate', affiliateRouter);
 
 app.get('/oauth2callback', async (req, res) => {
   const { code, error } = req.query;

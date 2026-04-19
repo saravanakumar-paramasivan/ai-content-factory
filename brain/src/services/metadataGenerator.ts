@@ -1,4 +1,5 @@
 import Anthropic from '@anthropic-ai/sdk';
+import { findRelevantLinks } from '../config/affiliateLinks';
 
 interface VideoMetadata {
   title: string;
@@ -10,6 +11,14 @@ interface ScriptData {
   title: string;
   voiceover_text: string;
   stock_keywords: string[];
+}
+
+function buildDescriptionWithLinks(description: string, niche: string, title: string): string {
+  const links = findRelevantLinks(niche, title);
+  if (links.length === 0) return description;
+
+  const linkBlock = links.map(l => `${l.cta}\n👉 ${l.url}`).join('\n\n');
+  return `${description}\n\n─────────────\n${linkBlock}`;
 }
 
 export async function generateVideoMetadata(
@@ -46,7 +55,14 @@ Return ONLY the JSON. No markdown, no explanation.`;
     .replace(/\s*```$/m, '');
 
   const data = JSON.parse(raw) as VideoMetadata;
+
+  // Inject affiliate links for relevant niches
+  data.description = buildDescriptionWithLinks(data.description, niche, data.title);
+
   console.log(`[MetadataGenerator] Title: "${data.title}"`);
   console.log(`[MetadataGenerator] Tags: ${data.tags.slice(0, 5).join(', ')}...`);
+  const linkCount = findRelevantLinks(niche, data.title).length;
+  if (linkCount > 0) console.log(`[MetadataGenerator] Injected ${linkCount} affiliate link(s)`);
+
   return data;
 }
